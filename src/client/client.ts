@@ -1,47 +1,46 @@
 import * as THREE from 'three'
 
+// add scene
 const scene = new THREE.Scene()
 
+// add camera
 const camera = new THREE.PerspectiveCamera(
-  75,
+  50,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 )
-camera.position.z = 2
+camera.position.set(0, 0, 500)
 
-const renderer = new THREE.WebGLRenderer()
+// add renderer
+const renderer = new THREE.WebGLRenderer({
+  alpha: true,
+})
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
-const geometry = new THREE.BoxGeometry()
-const material = new THREE.MeshBasicMaterial({
-  color: 0x00ff00,
-  wireframe: true,
-})
+// add geometry
+const ballGeometry = new THREE.SphereGeometry(100, 64, 32)
 
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
+// add material
+const ballMaterial = new THREE.MeshPhysicalMaterial()
 
-window.addEventListener('resize', onWindowResize, false)
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  render()
-}
+// add mesh
+const ballMesh = new THREE.Mesh(ballGeometry, ballMaterial)
+scene.add(ballMesh)
 
-function animate() {
-  requestAnimationFrame(animate)
+// add directional light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2)
+directionalLight.position.set(1, 1, 1)
+scene.add(directionalLight)
 
-  cube.rotation.x += 0.01
-  cube.rotation.y += 0.01
+// add point light
+const pointLight = new THREE.PointLight(0xffffff, 1)
+pointLight.position.set(-200, -200, -200)
+scene.add(pointLight)
 
-  render()
-}
+// add pointLightHelper
+let pointLightHelper = new THREE.PointLightHelper(pointLight, 30)
+scene.add(pointLightHelper)
 
-function render() {
-  renderer.render(scene, camera)
-}
-
-animate()
+renderer.render(scene, camera)
