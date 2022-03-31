@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import texture from './textures/earth.jpg'
 
 let scene: THREE.Scene
-let camera: THREE.Camera
+let camera: THREE.PerspectiveCamera
 let pointLight: THREE.PointLight
 let renderer: THREE.WebGLRenderer
 
@@ -57,8 +57,14 @@ const init = () => {
 
   // mouse move
   let controls = new OrbitControls(camera, renderer.domElement)
-
+  window.addEventListener('resize', onWindowResize)
   animate()
+}
+
+const onWindowResize = () => {
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
 }
 
 const animate = () => {
